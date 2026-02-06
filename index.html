@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top 10 ETFs by Market Cap — Comparison Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay visible" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <p>Fetching live data from Yahoo Finance…</p>
+  </div>
+
+  <!-- Error Banner -->
+  <div class="error-banner" id="errorBanner"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#6366f1"/>
+          <path d="M8 22L12 14L16 18L22 8L24 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1>ETF Compare</h1>
+      </div>
+      <div class="header-meta">
+        <p class="subtitle">Top 10 ETFs by Market Cap — Ranked by 15-Year Avg Annual Return</p>
+        <div class="header-actions">
+          <span class="data-timestamp" id="dataTimestamp"></span>
+          <button class="refresh-btn" id="refreshBtn" title="Refresh data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+              <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+            </svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Summary Cards -->
+  <section class="summary-cards" id="summaryCards"></section>
+
+  <!-- Chart Section -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <h2>Visual Comparison</h2>
+      <div class="chart-toggle">
+        <button class="chart-btn active" data-chart="fifteenYearReturn">15Y Return</button>
+        <button class="chart-btn" data-chart="maxDrawdown">Max Drawdown</button>
+        <button class="chart-btn" data-chart="marketCap">Market Cap</button>
+        <button class="chart-btn" data-chart="expenseRatio">Expense Ratio</button>
+        <button class="chart-btn" data-chart="ytdReturn">YTD Return</button>
+        <button class="chart-btn" data-chart="dividendYield">Dividend Yield</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="comparisonChart"></canvas>
+    </div>
+  </section>
+
+  <!-- Table Section -->
+  <section class="table-section">
+    <div class="table-header">
+      <h2>Detailed Comparison</h2>
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search ETFs...">
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table id="etfTable">
+        <thead>
+          <tr>
+            <th data-sort="rank">#</th>
+            <th data-sort="ticker">Ticker</th>
+            <th data-sort="name">Name</th>
+            <th data-sort="fifteenYearReturn" class="num">15Y Ann. Return</th>
+            <th data-sort="maxDrawdown" class="num">Max Drawdown</th>
+            <th data-sort="marketCap" class="num">Market Cap</th>
+            <th data-sort="price" class="num">Price</th>
+            <th data-sort="expenseRatio" class="num">Expense Ratio</th>
+            <th data-sort="ytdReturn" class="num">YTD Return</th>
+            <th data-sort="dividendYield" class="num">Div. Yield</th>
+            <th data-sort="avgVolume" class="num">Avg Volume</th>
+            <th data-sort="holdings" class="num">Holdings</th>
+            <th data-sort="inceptionDate">Inception</th>
+          </tr>
+        </thead>
+        <tbody id="etfTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="detailModal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Live data from Yahoo Finance. Prices and returns may be delayed. Not financial advice.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
