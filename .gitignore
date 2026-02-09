@@ -1,8 +1,6 @@
 .etf_cache.json
-.etf_data.db
 .etf_data.db-wal
 .etf_data.db-shm
-etf_data.db
 __pycache__/
 *.pyc
 node_modules/
