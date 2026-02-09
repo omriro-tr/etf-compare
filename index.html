@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top 10 ETFs by Market Cap — Comparison Dashboard</title>
+  <title>Top ETFs by Market Cap — Comparison Dashboard</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
 
@@ -29,7 +30,7 @@
         <h1>ETF Compare</h1>
       </div>
       <div class="header-meta">
-        <p class="subtitle">Top 10 ETFs by Market Cap — Ranked by 15-Year Avg Annual Return</p>
+        <p class="subtitle">Top 4 by 10Y Return, then ranked by lowest correlation (diversification)</p>
         <div class="header-actions">
           <span class="data-timestamp" id="dataTimestamp"></span>
           <button class="refresh-btn" id="refreshBtn" title="Refresh data">
@@ -47,21 +48,32 @@
   <!-- Summary Cards -->
   <section class="summary-cards" id="summaryCards"></section>
 
-  <!-- Chart Section -->
-  <section class="chart-section">
+  <!-- Growth Chart Section -->
+  <section class="chart-section growth-section">
     <div class="chart-header">
-      <h2>Visual Comparison</h2>
-      <div class="chart-toggle">
-        <button class="chart-btn active" data-chart="fifteenYearReturn">15Y Return</button>
-        <button class="chart-btn" data-chart="maxDrawdown">Max Drawdown</button>
-        <button class="chart-btn" data-chart="marketCap">Market Cap</button>
-        <button class="chart-btn" data-chart="expenseRatio">Expense Ratio</button>
-        <button class="chart-btn" data-chart="ytdReturn">YTD Return</button>
-        <button class="chart-btn" data-chart="dividendYield">Dividend Yield</button>
+      <h2>Growth of $10,000 Over Time</h2>
+      <div class="growth-controls">
+        <div class="growth-period-btns">
+          <button class="chart-btn" data-years="5">5Y</button>
+          <button class="chart-btn active" data-years="10">10Y</button>
+          <button class="chart-btn" data-years="15">15Y</button>
+          <button class="chart-btn" data-years="20">20Y</button>
+          <button class="chart-btn" data-years="25">25Y</button>
+          <button class="chart-btn" data-years="max">Max</button>
+        </div>
+        <div class="growth-picker" id="growthPicker">
+          <button class="growth-picker-btn" id="growthPickerBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            Select Assets (max 5)
+          </button>
+          <div class="growth-picker-dropdown" id="growthPickerDropdown"></div>
+        </div>
       </div>
     </div>
-    <div class="chart-container">
-      <canvas id="comparisonChart"></canvas>
+    <div class="chart-container" style="height:420px">
+      <canvas id="growthChart"></canvas>
     </div>
   </section>
 
@@ -69,11 +81,23 @@
   <section class="table-section">
     <div class="table-header">
       <h2>Detailed Comparison</h2>
-      <div class="search-box">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input type="text" id="searchInput" placeholder="Search ETFs...">
+      <div class="table-controls">
+        <div class="col-picker-wrap">
+          <button class="col-picker-btn" id="colPickerBtn" title="Choose columns">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </svg>
+            Columns
+          </button>
+          <div class="col-picker-dropdown" id="colPickerDropdown"></div>
+        </div>
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search ETFs...">
+        </div>
       </div>
     </div>
     <div class="table-wrapper">
@@ -83,8 +107,17 @@
             <th data-sort="rank">#</th>
             <th data-sort="ticker">Ticker</th>
             <th data-sort="name">Name</th>
-            <th data-sort="fifteenYearReturn" class="num">15Y Ann. Return</th>
+            <th data-sort="fiveYearReturn" class="num">5Y Avg Return</th>
+            <th data-sort="tenYearReturn" class="num">10Y Avg Return</th>
+            <th data-sort="fifteenYearReturn" class="num">15Y Avg Return</th>
+            <th data-sort="twentyYearReturn" class="num">20Y Avg Return</th>
+            <th data-sort="twentyFiveYearReturn" class="num">25Y Avg Return</th>
+            <th data-sort="since1990Return" class="num">Since 1990</th>
+            <th data-sort="sinceInceptionReturn" class="num">Since Inception</th>
             <th data-sort="maxDrawdown" class="num">Max Drawdown</th>
+            <th data-sort="secondDrawdown" class="num">2nd Drawdown</th>
+            <th data-sort="annualizedStdDev" class="num">Std Dev</th>
+            <th data-sort="sharpeRatio" class="num">Sharpe</th>
             <th data-sort="marketCap" class="num">Market Cap</th>
             <th data-sort="price" class="num">Price</th>
             <th data-sort="expenseRatio" class="num">Expense Ratio</th>
@@ -97,6 +130,32 @@
         </thead>
         <tbody id="etfTableBody"></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- Chart Section (Visual Comparison) -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <h2>Visual Comparison</h2>
+      <div class="chart-toggle">
+        <button class="chart-btn" data-chart="fiveYearReturn">5Y Avg</button>
+        <button class="chart-btn active" data-chart="tenYearReturn">10Y Avg</button>
+        <button class="chart-btn" data-chart="fifteenYearReturn">15Y Avg</button>
+        <button class="chart-btn" data-chart="twentyYearReturn">20Y Avg</button>
+        <button class="chart-btn" data-chart="twentyFiveYearReturn">25Y Avg</button>
+        <button class="chart-btn" data-chart="since1990Return">Since 1990</button>
+        <button class="chart-btn" data-chart="sinceInceptionReturn">Since Inception</button>
+        <button class="chart-btn" data-chart="maxDrawdown">Max Drawdown</button>
+        <button class="chart-btn" data-chart="annualizedStdDev">Std Dev</button>
+        <button class="chart-btn" data-chart="sharpeRatio">Sharpe Ratio</button>
+        <button class="chart-btn" data-chart="marketCap">Market Cap</button>
+        <button class="chart-btn" data-chart="expenseRatio">Expense Ratio</button>
+        <button class="chart-btn" data-chart="ytdReturn">YTD Return</button>
+        <button class="chart-btn" data-chart="dividendYield">Dividend Yield</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="comparisonChart"></canvas>
     </div>
   </section>
 

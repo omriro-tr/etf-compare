@@ -330,6 +330,111 @@ body {
   color: var(--text-muted);
 }
 
+/* ── Column Picker ───────────────────────────────────── */
+.table-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.col-picker-wrap {
+  position: relative;
+}
+
+.col-picker-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.col-picker-btn:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.col-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  padding: 0.5rem 0;
+  min-width: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.col-picker-dropdown.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.col-picker-dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--transition);
+  user-select: none;
+}
+
+.col-picker-dropdown label:hover {
+  background: var(--surface-hover);
+}
+
+.col-picker-dropdown input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.col-picker-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 0.25rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.25rem;
+}
+
+.col-picker-actions button {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.35rem 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.col-picker-actions button:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
 .table-wrapper {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -413,6 +518,68 @@ tbody td.num {
   padding: 0.25rem 0.55rem;
   border-radius: 5px;
   letter-spacing: 0.03em;
+}
+
+.data-since-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 0.15rem;
+  font-style: italic;
+}
+
+.rank-reason {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 0.1rem;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* ── Cumulative return row (table cells) ──────────────── */
+.cumul-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.cumul-pct {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.cumul-money {
+  color: var(--green);
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* ── Cumulative return row (modal cards) ─────────────── */
+.modal-cumul-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.modal-cumul-pct {
+  color: var(--text-muted);
+}
+
+.modal-cumul-money {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
 .positive {
@@ -536,6 +703,13 @@ tbody td.num {
   color: #fff;
 }
 
+.modal-stat .stat-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  font-style: italic;
+}
+
 .modal-description {
   margin-top: 1.5rem;
   padding-top: 1.2rem;
@@ -613,4 +787,120 @@ tbody td.num {
   .summary-cards {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Portfolio row highlight ───────────────────────── */
+.row-portfolio {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border-left: 3px solid #6366f1;
+}
+.row-portfolio:hover {
+  background: rgba(99, 102, 241, 0.14) !important;
+}
+.ticker-badge.badge-portfolio {
+  background: linear-gradient(135deg, #6366f122, #818cf822);
+  border-color: #6366f155;
+  color: #818cf8;
+  font-weight: 700;
+}
+
+/* ── Growth Chart Section ─────────────────────────── */
+.growth-section {
+  margin-top: -0.5rem;
+}
+.growth-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.growth-period-btns {
+  display: flex;
+  gap: 0.25rem;
+}
+.growth-picker {
+  position: relative;
+}
+.growth-picker-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 8px;
+  color: #c4c7e0;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.growth-picker-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.45);
+}
+.growth-picker-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  min-width: 240px;
+  background: #1a1d2e;
+  border: 1px solid #2a2e3f;
+  border-radius: 10px;
+  padding: 8px 0;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+  z-index: 100;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.growth-picker-dropdown.open {
+  display: block;
+}
+.growth-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-size: 0.85rem;
+  color: #c4c7e0;
+}
+.growth-picker-item:hover {
+  background: rgba(99, 102, 241, 0.12);
+}
+.growth-picker-item input[type="checkbox"] {
+  accent-color: #6366f1;
+  width: 16px;
+  height: 16px;
+}
+.growth-picker-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.growth-picker-item .gp-ticker {
+  font-weight: 700;
+  min-width: 60px;
+}
+.growth-picker-item .gp-name {
+  opacity: 0.65;
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Alternate asset (Real Estate) row highlight ──── */
+.row-alt-asset {
+  background: rgba(245, 158, 11, 0.06) !important;
+  border-left: 3px solid #f59e0b;
+}
+.row-alt-asset:hover {
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+.ticker-badge.badge-alt {
+  background: linear-gradient(135deg, #f59e0b22, #d9770622);
+  border-color: #f59e0b55;
+  color: #f59e0b;
 }
